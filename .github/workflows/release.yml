@@ -1,171 +1,195 @@
 name: Build
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    build:
-        runs-on: windows-latest
-        permissions:
-            contents: write
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "npm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
 
-            - name: Install Rust
-              uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
-            - name: Cache Rust dependencies
-              uses: Swatinem/rust-cache@v2
-              with:
-                  workspaces: "src-tauri -> target"
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
 
-            - name: Install dependencies
-              run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-            - name: Build Tauri app
-              shell: bash
-              run: |
-                  if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then
-                    echo "Signing key configured: YES"
-                  else
-                    echo "Signing key configured: NO"
-                  fi
-                  npm run tauri build
-              env:
-                  TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-                  TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      - name: Check compilation
+        shell: bash
+        run: |
+          cd src-tauri
+          cargo check
+          cd ..
+          npm run build
 
-            - name: Get next version
-              if: contains(github.event.head_commit.message, 'release')
-              id: version
-              shell: bash
-              run: |
-                  # Get the latest semver tag, default to 1.0.0 if none exists
-                  LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
-                  echo "Latest tag: $LATEST_TAG"
+      - name: Get next version
+        if: contains(github.event.head_commit.message, 'release')
+        id: version
+        shell: bash
+        run: |
+          # Get the latest semver tag, default to 1.0.0 if none exists
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          echo "Latest tag: $LATEST_TAG"
 
-                  # Remove 'v' prefix if present
-                  LATEST_TAG="${LATEST_TAG#v}"
+          # Remove 'v' prefix if present
+          LATEST_TAG="${LATEST_TAG#v}"
 
-                  # Parse version components
-                  MAJOR=$(echo "$LATEST_TAG" | cut -d. -f1)
-                  MINOR=$(echo "$LATEST_TAG" | cut -d. -f2)
-                  PATCH=$(echo "$LATEST_TAG" | cut -d. -f3)
+          # Parse version components
+          MAJOR=$(echo "$LATEST_TAG" | cut -d. -f1)
+          MINOR=$(echo "$LATEST_TAG" | cut -d. -f2)
+          PATCH=$(echo "$LATEST_TAG" | cut -d. -f3)
 
-                  # Increment patch version
-                  PATCH=$((PATCH + 1))
+          # Increment patch version
+          PATCH=$((PATCH + 1))
 
-                  # If this is the first release, start at 1.0.0
-                  if [ "$LATEST_TAG" == "0.0.0" ]; then
-                    NEW_VERSION="1.0.0"
-                  else
-                    NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-                  fi
+          # If this is the first release, start at 1.0.0
+          if [ "$LATEST_TAG" == "0.0.0" ]; then
+            NEW_VERSION="1.0.0"
+          else
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
 
-                  echo "New version: $NEW_VERSION"
-                  echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-            - name: Prepare release artifacts
-              if: contains(github.event.head_commit.message, 'release')
-              shell: bash
-              run: |
-                  VERSION="${{ steps.version.outputs.version }}"
+      - name: Update version in tauri.conf.json
+        if: contains(github.event.head_commit.message, 'release')
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          echo "Updating tauri.conf.json to version $VERSION"
+          jq --arg version "$VERSION" '.version = $version' src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
+          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+          cat src-tauri/tauri.conf.json | grep '"version"'
 
-                  # Debug: List all files in the msi directory
-                  echo "=== Files in MSI directory ==="
-                  ls -la src-tauri/target/release/bundle/msi/ || echo "MSI directory not found"
+      - name: Build Tauri app
+        if: contains(github.event.head_commit.message, 'release')
+        shell: bash
+        run: |
+          if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            echo "Signing key configured: YES"
+          else
+            echo "Signing key configured: NO"
+          fi
+          npm run tauri build
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
-                  # Find and rename the MSI file
-                  MSI_FILE=$(find src-tauri/target/release/bundle/msi -name "*.msi" ! -name "*-${VERSION}.msi" | head -1)
-                  if [ -n "$MSI_FILE" ]; then
-                    NEW_NAME="DR-Icon-Changer-${VERSION}.msi"
-                    cp "$MSI_FILE" "src-tauri/target/release/bundle/msi/$NEW_NAME"
-                    echo "MSI_PATH=src-tauri/target/release/bundle/msi/$NEW_NAME" >> $GITHUB_ENV
-                    echo "Renamed MSI to: $NEW_NAME"
+      - name: Prepare release artifacts
+        if: contains(github.event.head_commit.message, 'release')
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
 
-                    # Copy signature file if it exists
-                    if [ -f "${MSI_FILE}.sig" ]; then
-                      cp "${MSI_FILE}.sig" "src-tauri/target/release/bundle/msi/${NEW_NAME}.sig"
-                      echo "MSI_SIG_PATH=src-tauri/target/release/bundle/msi/${NEW_NAME}.sig" >> $GITHUB_ENV
-                      echo "Copied signature file"
-                    fi
-                  else
-                    echo "No MSI file found!"
-                    exit 1
-                  fi
+          # Debug: List all files in the msi directory
+          echo "=== Files in MSI directory ==="
+          ls -la src-tauri/target/release/bundle/msi/ || echo "MSI directory not found"
 
-            - name: Generate latest.json for updater
-              if: contains(github.event.head_commit.message, 'release')
-              shell: bash
-              run: |
-                  VERSION="${{ steps.version.outputs.version }}"
-                  MSI_NAME="DR-Icon-Changer-${VERSION}.msi"
-                  SIG_FILE="src-tauri/target/release/bundle/msi/${MSI_NAME}.sig"
-                  DOWNLOAD_URL="https://github.com/sammers21/dr-icon-changer/releases/download/${VERSION}/${MSI_NAME}"
-                  OUTPUT_FILE="src-tauri/target/release/bundle/msi/latest.json"
+          # Find the MSI file (exclude .sig files and already versioned files)
+          MSI_FILE=$(find src-tauri/target/release/bundle/msi -name "*.msi" ! -name "*.msi.sig" ! -name "*-${VERSION}.msi" -type f | head -1)
+          if [ -n "$MSI_FILE" ]; then
+            NEW_NAME="DR-Icon-Changer-${VERSION}.msi"
+            cp "$MSI_FILE" "src-tauri/target/release/bundle/msi/$NEW_NAME"
+            echo "MSI_PATH=src-tauri/target/release/bundle/msi/$NEW_NAME" >> $GITHUB_ENV
+            echo "Renamed MSI to: $NEW_NAME"
 
-                  # Read the signature (preserve exact content)
-                  SIGNATURE=""
-                  if [ -f "$SIG_FILE" ]; then
-                    SIGNATURE=$(cat "$SIG_FILE")
-                  fi
+            # Copy signature file if it exists
+            if [ -f "${MSI_FILE}.sig" ]; then
+              cp "${MSI_FILE}.sig" "src-tauri/target/release/bundle/msi/${NEW_NAME}.sig"
+              echo "MSI_SIG_PATH=src-tauri/target/release/bundle/msi/${NEW_NAME}.sig" >> $GITHUB_ENV
+              echo "Copied signature file"
+            else
+              echo "WARNING: No signature file found at ${MSI_FILE}.sig"
+              echo "Updater will not work without a valid signature!"
+            fi
+          else
+            echo "No MSI file found!"
+            exit 1
+          fi
 
-                  # Create latest.json using jq for proper JSON encoding
-                  jq -n \
-                    --arg version "$VERSION" \
-                    --arg notes "Release $VERSION" \
-                    --arg pub_date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-                    --arg signature "$SIGNATURE" \
-                    --arg url "$DOWNLOAD_URL" \
-                    '{
-                      version: $version,
-                      notes: $notes,
-                      pub_date: $pub_date,
-                      platforms: {
-                        "windows-x86_64": {
-                          signature: $signature,
-                          url: $url
-                        }
-                      }
-                    }' > "$OUTPUT_FILE"
+      - name: Generate latest.json for updater
+        if: contains(github.event.head_commit.message, 'release')
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          MSI_NAME="DR-Icon-Changer-${VERSION}.msi"
+          SIG_FILE="src-tauri/target/release/bundle/msi/${MSI_NAME}.sig"
+          DOWNLOAD_URL="https://github.com/sammers21/dr-icon-changer/releases/download/${VERSION}/${MSI_NAME}"
+          OUTPUT_FILE="src-tauri/target/release/bundle/msi/latest.json"
 
-                  echo "LATEST_JSON_PATH=$OUTPUT_FILE" >> $GITHUB_ENV
-                  echo "Generated latest.json"
-                  cat "$OUTPUT_FILE"
+          # Read the signature (preserve exact content)
+          if [ -f "$SIG_FILE" ]; then
+            SIGNATURE=$(cat "$SIG_FILE")
+            echo "Found signature file: $SIG_FILE"
+          else
+            echo "ERROR: Signature file not found at $SIG_FILE"
+            echo "The updater requires a valid signature. Make sure TAURI_SIGNING_PRIVATE_KEY is set."
+            exit 1
+          fi
 
-            - name: Create GitHub Release
-              if: contains(github.event.head_commit.message, 'release')
-              uses: softprops/action-gh-release@v2
-              with:
-                  tag_name: ${{ steps.version.outputs.version }}
-                  name: Release ${{ steps.version.outputs.version }}
-                  body: |
-                      ## DR Icon Changer v${{ steps.version.outputs.version }}
+          # Create latest.json using jq for proper JSON encoding
+          jq -n \
+            --arg version "$VERSION" \
+            --arg notes "Release $VERSION" \
+            --arg pub_date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg signature "$SIGNATURE" \
+            --arg url "$DOWNLOAD_URL" \
+            '{
+              version: $version,
+              notes: $notes,
+              pub_date: $pub_date,
+              platforms: {
+                "windows-x86_64": {
+                  signature: $signature,
+                  url: $url
+                }
+              }
+            }' > "$OUTPUT_FILE"
 
-                      ### Download
-                      Download the MSI installer below and run it to install DR Icon Changer.
+          echo "LATEST_JSON_PATH=$OUTPUT_FILE" >> $GITHUB_ENV
+          echo "Generated latest.json"
+          cat "$OUTPUT_FILE"
 
-                      ### Changes
-                      **Commit:** ${{ github.sha }}
-                      **Message:** ${{ github.event.head_commit.message }}
-                  draft: false
-                  prerelease: false
-                  generate_release_notes: true
-                  files: |
-                      ${{ env.MSI_PATH }}
-                      ${{ env.MSI_PATH }}.sig
-                      ${{ env.LATEST_JSON_PATH }}
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        if: contains(github.event.head_commit.message, 'release')
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          body: |
+            ## DR Icon Changer v${{ steps.version.outputs.version }}
+
+            ### Download
+            Download the MSI installer below and run it to install DR Icon Changer.
+
+            ### Changes
+            **Commit:** ${{ github.sha }}
+            **Message:** ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            ${{ env.MSI_PATH }}
+            ${{ env.MSI_SIG_PATH }}
+            ${{ env.LATEST_JSON_PATH }}
