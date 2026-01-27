@@ -1,7 +1,4 @@
-# Tauri + React + Typescript
+# DR icon changer
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+<img width="1584" height="1369" alt="image" src="https://github.com/user-attachments/assets/b75e8289-4a08-4017-9145-c822577f7d39" />
