@@ -85,6 +85,11 @@ npm run tauri build
 
 This project is open source and available under the [MIT License](LICENSE).
 
+## 🙏 Credits
+
+- **[@Bicmex](https://www.twitch.tv/bicmex)** - For the idea and help with finding the right spell and file names
+- **[Clean Icons - Mechagnome Edition](https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition)** - For the beautiful upscaled icons
+
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
