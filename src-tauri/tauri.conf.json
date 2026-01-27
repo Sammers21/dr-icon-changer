@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "dr-icon-changer",
+  "productName": "DR Icon Changer",
   "version": "0.1.0",
   "identifier": "io.github.sammers21.dr-icon-changer",
   "build": {
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "dr-icon-changer",
+        "title": "DR Icon Changer",
         "width": 800,
-        "height": 600
+        "height": 650,
+        "center": true,
+        "decorations": true
       }
     ],
     "security": {
@@ -23,7 +25,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["msi"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
