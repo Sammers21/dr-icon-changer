@@ -72,12 +72,15 @@ export function TgaImage({ src, alt, className }: TgaImageProps) {
 
   if (loading) {
     return (
-      <div className={className} style={{ 
-        backgroundColor: "#1c2128", 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center" 
-      }}>
+      <div
+        className={className}
+        style={{
+          backgroundColor: "#1c2128",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <span style={{ fontSize: "0.7em", color: "#6e7681" }}>...</span>
       </div>
     );

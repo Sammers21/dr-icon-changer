@@ -53,7 +53,12 @@ const initialDRCategories: DRCategory[] = [
       { src: stunAlt2, name: "Cheap Shot" },
     ],
     selectedIcon: stunDefault,
-    affectedAbilities: ["Concussive Shot (Hunter)", "Concussion Blow", "War Stomp", "and other stun-related abilities"],
+    affectedAbilities: [
+      "Concussive Shot (Hunter)",
+      "Concussion Blow",
+      "War Stomp",
+      "and other stun-related abilities",
+    ],
   },
   {
     id: "incap",
@@ -66,7 +71,12 @@ const initialDRCategories: DRCategory[] = [
       { src: incapAlt2, name: "Chains of Ice" },
     ],
     selectedIcon: incapDefault,
-    affectedAbilities: ["Repentance", "Gouge", "Sap", "and other incapacitate abilities"],
+    affectedAbilities: [
+      "Repentance",
+      "Gouge",
+      "Sap",
+      "and other incapacitate abilities",
+    ],
   },
   {
     id: "fear",
@@ -74,11 +84,14 @@ const initialDRCategories: DRCategory[] = [
     description: "Fear effects (Psychic Scream, Howl of Terror, etc.)",
     defaultIcon: fearDefault,
     defaultIconName: "Spell_Nature_AstralRecalGroup.tga",
-    alternatives: [
-      { src: fearAlt1, name: "Possession" },
-    ],
+    alternatives: [{ src: fearAlt1, name: "Possession" }],
     selectedIcon: fearDefault,
-    affectedAbilities: ["Intimidating Shout", "Psychic Scream", "Howl of Terror", "and other fear abilities"],
+    affectedAbilities: [
+      "Intimidating Shout",
+      "Psychic Scream",
+      "Howl of Terror",
+      "and other fear abilities",
+    ],
   },
   {
     id: "root",
@@ -86,11 +99,14 @@ const initialDRCategories: DRCategory[] = [
     description: "Root effects (Entangling Roots, Frost Nova, etc.)",
     defaultIcon: rootDefault,
     defaultIconName: "Spell_Nature_StrangleVines.tga",
-    alternatives: [
-      { src: rootAlt1, name: "Frost Nova" },
-    ],
+    alternatives: [{ src: rootAlt1, name: "Frost Nova" }],
     selectedIcon: rootDefault,
-    affectedAbilities: ["Entangling Roots", "Mass Entanglement", "Earthbind Totem", "and other root abilities"],
+    affectedAbilities: [
+      "Entangling Roots",
+      "Mass Entanglement",
+      "Earthbind Totem",
+      "and other root abilities",
+    ],
   },
 ];
 
@@ -101,7 +117,8 @@ function App() {
   const [selectedVersion, setSelectedVersion] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isHovering, setIsHovering] = useState<boolean>(false);
-  const [drCategories, setDRCategories] = useState<DRCategory[]>(initialDRCategories);
+  const [drCategories, setDRCategories] =
+    useState<DRCategory[]>(initialDRCategories);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [applyingIcon, setApplyingIcon] = useState<string | null>(null);
   const [resettingAll, setResettingAll] = useState<boolean>(false);
@@ -113,14 +130,14 @@ function App() {
       try {
         const store = await Store.load("settings.json");
         const savedFolder = await store.get<string>("wowFolder");
-        
+
         if (savedFolder) {
           setWowFolder(savedFolder);
           // Try to get versions for the saved folder
           const detectedVersions = await invoke<string[]>("get_wow_versions", {
             wowFolder: savedFolder,
           });
-          
+
           if (detectedVersions.length > 0) {
             setVersions(detectedVersions);
             setScreen("version-select");
@@ -132,7 +149,7 @@ function App() {
         setIsLoading(false);
       }
     }
-    
+
     loadSavedFolder();
   }, []);
 
@@ -153,7 +170,7 @@ function App() {
     if (imageSrc.toLowerCase().includes(".tga")) {
       return tgaToBase64(imageSrc);
     }
-    
+
     // For other formats, use standard approach
     const response = await fetch(imageSrc);
     const blob = await response.blob();
@@ -185,7 +202,7 @@ function App() {
 
         if (detectedVersions.length === 0) {
           setError(
-            "No WoW version directories found. Please select a valid WoW folder (should contain directories like _retail_, _beta_, etc.)"
+            "No WoW version directories found. Please select a valid WoW folder (should contain directories like _retail_, _beta_, etc.)",
           );
           setVersions([]);
         } else {
@@ -244,8 +261,8 @@ function App() {
       // Update local state
       setDRCategories((prev) =>
         prev.map((cat) =>
-          cat.id === categoryId ? { ...cat, selectedIcon: iconSrc } : cat
-        )
+          cat.id === categoryId ? { ...cat, selectedIcon: iconSrc } : cat,
+        ),
       );
       setExpandedCategory(null);
     } catch (e) {
@@ -277,8 +294,10 @@ function App() {
       // Update local state
       setDRCategories((prev) =>
         prev.map((cat) =>
-          cat.id === categoryId ? { ...cat, selectedIcon: cat.defaultIcon } : cat
-        )
+          cat.id === categoryId
+            ? { ...cat, selectedIcon: cat.defaultIcon }
+            : cat,
+        ),
       );
     } catch (e) {
       setError(`Failed to reset icon: ${e}`);
@@ -300,7 +319,7 @@ function App() {
 
       // Reset all categories to default in local state
       setDRCategories((prev) =>
-        prev.map((cat) => ({ ...cat, selectedIcon: cat.defaultIcon }))
+        prev.map((cat) => ({ ...cat, selectedIcon: cat.defaultIcon })),
       );
     } catch (e) {
       setError(`Failed to reset all icons: ${e}`);
@@ -311,7 +330,10 @@ function App() {
 
   // Format version name for display (remove underscores and capitalize)
   function formatVersionName(version: string): string {
-    return version.replace(/_/g, "").charAt(0).toUpperCase() + version.replace(/_/g, "").slice(1);
+    return (
+      version.replace(/_/g, "").charAt(0).toUpperCase() +
+      version.replace(/_/g, "").slice(1)
+    );
   }
 
   return (
@@ -327,8 +349,8 @@ function App() {
       )}
       {!isLoading && screen === "folder-select" && (
         <div className="folder-select-screen">
-          <div 
-            className={`logo-container ${isHovering ? 'hovering' : ''}`}
+          <div
+            className={`logo-container ${isHovering ? "hovering" : ""}`}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
           >
@@ -342,9 +364,7 @@ function App() {
             <span className="btn-icon">📁</span>
             Select WoW Folder
           </button>
-          {wowFolder && (
-            <p className="selected-path">Selected: {wowFolder}</p>
-          )}
+          {wowFolder && <p className="selected-path">Selected: {wowFolder}</p>}
           {error && <p className="error-message">{error}</p>}
         </div>
       )}
@@ -386,12 +406,13 @@ function App() {
           </div>
           <h1>Customize DR Icons</h1>
           <p className="description">
-            Click on a category to change its icon. Changes are applied instantly to{" "}
-            <strong>{formatVersionName(selectedVersion)}</strong>.
+            Click on a category to change its icon. Changes are applied
+            instantly to <strong>{formatVersionName(selectedVersion)}</strong>.
           </p>
           <div className="restart-notice">
-            <strong>⚠️ Important:</strong> After changing icons, a <strong>full game restart</strong> is required. 
-            Using <code>/reload</code> will not apply the changes.
+            <strong>⚠️ Important:</strong> After changing icons, a{" "}
+            <strong>full game restart</strong> is required. Using{" "}
+            <code>/reload</code> will not apply the changes.
           </div>
           {error && <p className="error-message">{error}</p>}
 
@@ -414,9 +435,10 @@ function App() {
                     {applyingIcon === category.id && (
                       <span className="loading-badge">⏳</span>
                     )}
-                    {applyingIcon !== category.id && category.selectedIcon !== category.defaultIcon && (
-                      <span className="customized-badge">✓</span>
-                    )}
+                    {applyingIcon !== category.id &&
+                      category.selectedIcon !== category.defaultIcon && (
+                        <span className="customized-badge">✓</span>
+                      )}
                   </div>
                   <div className="dr-category-info">
                     <h3>{category.name}</h3>
@@ -429,11 +451,16 @@ function App() {
 
                 {expandedCategory === category.id && (
                   <div className="dr-alternatives">
-                    <p className="alternatives-label">Choose an icon (changes apply instantly):</p>
+                    <p className="alternatives-label">
+                      Choose an icon (changes apply instantly):
+                    </p>
                     <div className="alternatives-grid">
                       <div
                         className={`alternative-icon ${category.selectedIcon === category.defaultIcon ? "selected" : ""} ${applyingIcon ? "disabled" : ""}`}
-                        onClick={() => !applyingIcon && selectDRIcon(category.id, category.defaultIcon)}
+                        onClick={() =>
+                          !applyingIcon &&
+                          selectDRIcon(category.id, category.defaultIcon)
+                        }
                       >
                         <TgaImage src={category.defaultIcon} alt="Default" />
                         <span>Default</span>
@@ -442,7 +469,9 @@ function App() {
                         <div
                           key={idx}
                           className={`alternative-icon ${category.selectedIcon === alt.src ? "selected" : ""} ${applyingIcon ? "disabled" : ""}`}
-                          onClick={() => !applyingIcon && selectDRIcon(category.id, alt.src)}
+                          onClick={() =>
+                            !applyingIcon && selectDRIcon(category.id, alt.src)
+                          }
                         >
                           <TgaImage src={alt.src} alt={alt.name} />
                           <span>{alt.name}</span>
@@ -451,8 +480,9 @@ function App() {
                     </div>
                     <div className="disclaimer-warning">
                       <strong>⚠️ Warning:</strong>
-                      Changing this icon will also affect the appearance of: {category.affectedAbilities.join(", ")}. 
-                      This is because they share the same base icon texture.
+                      Changing this icon will also affect the appearance of:{" "}
+                      {category.affectedAbilities.join(", ")}. This is because
+                      they share the same base icon texture.
                     </div>
                     {category.selectedIcon !== category.defaultIcon && (
                       <button
@@ -476,8 +506,8 @@ function App() {
             <button className="back-btn" onClick={goBack}>
               ← Back
             </button>
-            <button 
-              className="reset-all-btn" 
+            <button
+              className="reset-all-btn"
               onClick={resetAllIcons}
               disabled={resettingAll || !!applyingIcon}
             >

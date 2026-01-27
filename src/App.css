@@ -1,7 +1,12 @@
 /* DR Icon Changer - Blue-Black Theme */
 
 :root {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: 16px;
   line-height: 1.6;
   font-weight: 400;
@@ -11,23 +16,23 @@
   --bg-secondary: #0d1117;
   --bg-card: #161b22;
   --bg-hover: #1c2128;
-  
+
   --accent-primary: #00d4ff;
   --accent-secondary: #0099cc;
   --accent-glow: rgba(0, 212, 255, 0.5);
   --accent-subtle: rgba(0, 212, 255, 0.1);
-  
+
   --text-primary: #e6edf3;
   --text-secondary: #8b949e;
   --text-muted: #6e7681;
-  
+
   --border-primary: #30363d;
   --border-accent: rgba(0, 212, 255, 0.3);
-  
+
   --warning-bg: rgba(220, 38, 38, 0.15);
   --warning-border: rgba(220, 38, 38, 0.5);
   --warning-text: #ef4444;
-  
+
   --error-bg: rgba(248, 81, 73, 0.1);
   --error-border: rgba(248, 81, 73, 0.4);
   --error-text: #f85149;
@@ -58,10 +63,22 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 212, 255, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 153, 204, 0.1), transparent),
-    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(0, 153, 204, 0.05), transparent);
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -20%,
+      rgba(0, 212, 255, 0.15),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 100%,
+      rgba(0, 153, 204, 0.1),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 0% 100%,
+      rgba(0, 153, 204, 0.05),
+      transparent
+    );
   pointer-events: none;
   z-index: 0;
 }
@@ -118,7 +135,12 @@ h1 {
   margin-bottom: 0.5rem;
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #fff 50%, var(--accent-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary) 0%,
+    #fff 50%,
+    var(--accent-primary) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -150,13 +172,17 @@ button {
 }
 
 button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(0, 212, 255, 0.05) 100%);
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(0, 212, 255, 0.05) 100%
+  );
   opacity: 0;
   transition: opacity 0.25s;
 }
@@ -164,7 +190,9 @@ button::before {
 button:hover {
   border-color: var(--border-accent);
   background-color: var(--bg-hover);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 212, 255, 0.1);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 212, 255, 0.1);
 }
 
 button:hover::before {
@@ -179,10 +207,14 @@ button:active {
 .select-folder-btn {
   padding: 1.1em 2.2em;
   font-size: 1.15em;
-  background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary) 0%,
+    var(--accent-primary) 100%
+  );
   color: #000;
   border: none;
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(0, 212, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   display: flex;
@@ -192,7 +224,7 @@ button:active {
 
 .select-folder-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 
+  box-shadow:
     0 8px 30px rgba(0, 212, 255, 0.4),
     0 0 40px rgba(0, 212, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -260,11 +292,15 @@ button:active {
 }
 
 .version-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: -2px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
   opacity: 0;
   z-index: -1;
   transition: opacity 0.25s;
@@ -278,7 +314,11 @@ button:active {
 }
 
 .version-btn.selected {
-  background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary) 0%,
+    var(--accent-primary) 100%
+  );
   border-color: transparent;
   color: #000;
   font-weight: 700;
@@ -431,7 +471,11 @@ button:active {
   right: -6px;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary),
+    var(--accent-primary)
+  );
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -459,8 +503,12 @@ button:active {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .dr-category.applying {
@@ -473,8 +521,13 @@ button:active {
 }
 
 @keyframes iconPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .dr-category-info {
@@ -557,7 +610,11 @@ button:active {
 
 .alternative-icon.selected {
   border-color: var(--accent-primary);
-  background: linear-gradient(135deg, rgba(0, 153, 204, 0.2), rgba(0, 212, 255, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 153, 204, 0.2),
+    rgba(0, 212, 255, 0.2)
+  );
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
 }
 
@@ -625,18 +682,22 @@ button:active {
 .apply-btn {
   padding: 0.9em 2em;
   font-size: 1.1em;
-  background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-primary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-secondary) 0%,
+    var(--accent-primary) 100%
+  );
   color: #000;
   border: none;
   font-weight: 700;
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(0, 212, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .apply-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 8px 30px rgba(0, 212, 255, 0.4),
     0 0 40px rgba(0, 212, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -683,7 +744,7 @@ button:active {
   background-color: rgba(0, 0, 0, 0.3);
   padding: 0.1em 0.4em;
   border-radius: 4px;
-  font-family: 'Consolas', 'Monaco', monospace;
+  font-family: "Consolas", "Monaco", monospace;
   font-size: 0.9em;
 }
 

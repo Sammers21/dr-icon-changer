@@ -31,7 +31,7 @@ const sizes = [
 
 async function generateIcons() {
     console.log('Generating icons from app-logo.png...');
-    
+
     for (const { name, size } of sizes) {
         const outputPath = path.join(outputDir, name);
         await sharp(inputPath)
@@ -40,14 +40,14 @@ async function generateIcons() {
             .toFile(outputPath);
         console.log(`Generated: ${name} (${size}x${size})`);
     }
-    
+
     // Generate ICO file (Windows) using png-to-ico
     const icoPath = path.join(outputDir, 'icon.ico');
     const iconPng = path.join(outputDir, 'icon.png');
     const icoBuffer = await pngToIco(iconPng);
     fs.writeFileSync(icoPath, icoBuffer);
     console.log('Generated: icon.ico');
-    
+
     console.log('Icon generation complete!');
 }
 
