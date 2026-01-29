@@ -8,28 +8,37 @@ import { info, error as logError } from "@tauri-apps/plugin-log";
 import "./App.css";
 import { TgaImage, tgaToBase64 } from "./TgaImage";
 
-// Import default DR icons
+// Import default DR icons - silenceDefault commented here to uncomment if Blizzard adds the category
 import stunDefault from "./assets/default-drs/spell_frost_stun.tga";
 import incapDefault from "./assets/default-drs/spell_holy_dizzy.tga";
 import fearDefault from "./assets/default-drs/spell_nature_astralrecalgroup.tga";
 import rootDefault from "./assets/default-drs/spell_nature_stranglevines.tga";
+// import silenceDefault from "./assets/default-drs/ability_priest_silence.tga";
 
 // Import alternative icons - Stun
 import stunAlt1 from "./assets/alternative-stun/ability_rogue_kidneyshot.tga";
 import stunAlt2 from "./assets/alternative-stun/ability_CheapShot.tga";
 import stunAlt3 from "./assets/alternative-stun/spell_holy_sealofmight.tga";
+import stunAlt4 from "./assets/alternative-stun/shaman_pvp_lightninglasso.tga";
 
 // Import alternative icons - Incap (sheep)
-import incapAlt1 from "./assets/alternaitve-incap/spell_nature_polymorph.tga";
-import incapAlt2 from "./assets/alternaitve-incap/spell_frost_chainsofice.tga";
-import incapAlt3 from "./assets/alternaitve-incap/ability_monk_paralysis.tga";
+import incapAlt1 from "./assets/alternative-incap/spell_nature_polymorph.tga";
+import incapAlt2 from "./assets/alternative-incap/spell_frost_chainsofice.tga";
+import incapAlt3 from "./assets/alternative-incap/ability_monk_paralysis.tga";
+import incapAlt4 from "./assets/alternative-incap/spell_shaman_hex.tga";
 
 // Import alternative icons - Fear
 import fearAlt1 from "./assets/alternative-fear/spell_shadow_possession.tga";
 import fearAlt2 from "./assets/alternative-fear/spell_shadow_psychicscream.tga";
+import fearAlt3 from "./assets/alternative-fear/spell_shadow_mindsteal.tga";
 
 // Import alternative icons - Root
 import rootAlt1 from "./assets/alternative-root/spell_frost_frostnova.tga";
+
+// Import alternative icons - Silence - commented here to uncomment if Blizzard adds the category
+// import silenceAlt1 from "./assets/alternative-silence/spell_deathknight_strangulate.tga";
+// import silenceAlt2 from "./assets/alternative-silence/spell_holy_silence.tga";
+// import silenceAlt3 from "./assets/alternative-silence/hunter_pvp_spidersting.tga";
 
 // Import app logo
 import appLogo from "./assets/app-logo.png";
@@ -63,6 +72,7 @@ const initialDRCategories: DRCategory[] = [
       { src: stunAlt1, name: "Kidney Shot" },
       { src: stunAlt2, name: "Cheap Shot" },
       { src: stunAlt3, name: "Hammer of Justice" },
+      { src: stunAlt4, name: "Lightning Lasso" },
     ],
     selectedIcon: stunDefault,
     affectedAbilities: [
@@ -82,6 +92,7 @@ const initialDRCategories: DRCategory[] = [
       { src: incapAlt1, name: "Polymorph" },
       { src: incapAlt2, name: "Chains of Ice" },
       { src: incapAlt3, name: "Paralysis" },
+      { src: incapAlt4, name: "Hex" },
     ],
     selectedIcon: incapDefault,
     affectedAbilities: [    ],
@@ -95,6 +106,7 @@ const initialDRCategories: DRCategory[] = [
     alternatives: [
       { src: fearAlt1, name: "Possession" },
       { src: fearAlt2, name: "Psychic Scream" },
+      { src: fearAlt3, name: "Blind" },
     ],
     selectedIcon: fearDefault,
     affectedAbilities: [],
@@ -114,6 +126,26 @@ const initialDRCategories: DRCategory[] = [
       "and other root abilities",
     ],
   },
+  // Silence category commented here to uncomment if Blizzard adds the category
+  // {
+  //   id: "silence",
+  //   name: "Silence",
+  //   description: "Silence effects (Silence, Strangulate, etc.) (not yet supported in-game)",
+  //   defaultIcon: silenceDefault,
+  //   defaultIconName: "Ability_Priest_Silence.tga",
+  //   alternatives: [
+  //     { src: silenceAlt1, name: "Strangulate" },
+  //     { src: silenceAlt2, name: "Unstable Affliction" },
+  //     { src: silenceAlt3, name: "Spider Venom" },
+  //   ],
+  //   selectedIcon: silenceAlt1,
+  //   affectedAbilities: [
+  //     "Silence",
+  //     "Strangulate",
+  //     "Spider Venom (Chimaeral Sting)",
+  //     "and other abilities",
+  //   ],
+  // },
 ];
 
 function App() {
