@@ -17,6 +17,8 @@
   </a>
 </p>
 
+> **Is this bannable?** No. This tool works the same way WoW addons do — it creates an `Interface/ICONS` folder inside your WoW directory and places icon files there. WoW natively supports loading custom icons from this folder. **No game files are modified or replaced.** Projects like [Clean Icons - Mechagnome Edition](https://github.com/AcidWeb/Clean-Icons-Mechagnome-Edition) have used the exact same approach since 2022 with zero issues.
+
 ---
 
 ## 🎮 What is this?
@@ -38,7 +40,7 @@ By default, DR trackers use generic spell icons that can be hard to distinguish 
 - 🔄 **Easy Reset**: One-click reset to restore all default icons
 - 🎮 **Multi-Version Support**: Works with Retail, PTR, Beta, and other WoW versions
 
-## 📥 Installation
+## 📥 Installation (Windows only)
 
 1. Download the latest `.msi` installer from the [Releases page](https://github.com/Sammers21/dr-icon-changer/releases/latest)
 2. Run the installer and follow the prompts
@@ -55,10 +57,6 @@ By default, DR trackers use generic spell icons that can be hard to distinguish 
 
 - **Full game restart required**: After changing icons, you must completely close and reopen World of Warcraft. Using `/reload` will not apply the changes.
 - **Icon sharing**: Changing a DR icon will also affect other abilities that use the same base texture (e.g., changing the Stun DR icon will also change Concussive Shot's appearance)
-
-## 🛠️ How It Works
-
-The app works by placing custom icon files in the `Interface/ICONS` folder within your WoW installation. WoW automatically loads these custom icons instead of the default ones, allowing addons that display DR icons to show your customized versions.
 
 ## 🔧 Building from Source
 
