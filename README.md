@@ -46,6 +46,13 @@ By default, DR trackers use generic spell icons that can be hard to distinguish 
 2. Run the installer and follow the prompts
 3. Launch **DR Icon Changer** from your Start Menu
 
+> **⚠️ Windows SmartScreen / Smart App Control warning**: Windows may show a warning saying it blocked the application because it can't confirm who published it. This is expected — the app is not currently signed with a paid code-signing certificate. **The app is completely safe** and the source code is fully open for review.
+>
+> **To bypass the warning:**
+>
+> - Click **"More info"** on the SmartScreen popup, then click **"Run anyway"**
+> - If you have **Smart App Control** enabled and there is no "Run anyway" option, go to **Settings → Privacy & Security → Windows Security → App & browser control → Smart App Control** and set it to **Off** or **Evaluation** mode, then try again
+
 ## 🚀 Usage
 
 1. **Select your WoW folder** - Point the app to your World of Warcraft installation directory
