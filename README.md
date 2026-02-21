@@ -23,7 +23,7 @@
 
 ## 🎮 What is this?
 
-DR Icon Changer is a simple desktop application that lets you customize the **Diminishing Returns (DR) icons** displayed by arena addons like [Gladius](https://www.curseforge.com/wow/addons/gladius), [sArena](https://www.curseforge.com/wow/addons/sarena), and others in **World of Warcraft: Midnight (12.0+)**.
+DR Icon Changer is a simple desktop application that lets you customize the **Diminishing Returns (DR) icons** displayed by arena addons like [Gladius]([https://www.curseforge.com/wow/addons/gladius](https://www.curseforge.com/wow/addons/gladius-updated-by-sammers21), [sArena](https://www.curseforge.com/wow/addons/sarena-edited-by-sammers), and others in **World of Warcraft: Midnight (12.0+)**.
 
 By default, DR trackers use generic spell icons that can be hard to distinguish at a glance. This tool lets you replace them with more recognizable icons that match your preferences.
 
