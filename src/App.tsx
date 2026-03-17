@@ -36,6 +36,8 @@ import fearAlt4 from "./assets/alternative-fear/Spell_Nature_EarthBind.tga";
 
 // Import alternative icons - Root
 import rootAlt1 from "./assets/alternative-root/spell_frost_frostnova.tga";
+import rootAlt2 from "./assets/alternative-root/Ability_Priest_Silence.tga";
+import rootAlt3 from "./assets/alternative-root/Ability_Warrior_Disarm.tga";
 
 // Import alternative icons - Silence - commented here to uncomment if Blizzard adds the category
 // import silenceAlt1 from "./assets/alternative-silence/spell_deathknight_strangulate.tga";
@@ -125,7 +127,11 @@ const initialDRCategories: DRCategory[] = [
     description: "Root effects (Entangling Roots, Frost Nova, etc.)",
     defaultIcon: rootDefault,
     defaultIconName: "Spell_Nature_StrangleVines.tga",
-    alternatives: [{ src: rootAlt1, name: "Frost Nova" }],
+    alternatives: [
+      { src: rootAlt1, name: "Frost Nova" },
+      { src: rootAlt2, name: "Silence" },
+      { src: rootAlt3, name: "Disarm" },
+    ],
     selectedIcon: rootDefault,
     affectedAbilities: [
       "Entangling Roots",
