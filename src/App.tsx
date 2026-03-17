@@ -20,6 +20,7 @@ import stunAlt1 from "./assets/alternative-stun/ability_rogue_kidneyshot.tga";
 import stunAlt2 from "./assets/alternative-stun/ability_CheapShot.tga";
 import stunAlt3 from "./assets/alternative-stun/spell_holy_sealofmight.tga";
 import stunAlt4 from "./assets/alternative-stun/shaman_pvp_lightninglasso.tga";
+import stunAlt5 from "./assets/alternative-stun/Ability_Druid_Mangle.tga";
 
 // Import alternative icons - Incap (sheep)
 import incapAlt1 from "./assets/alternative-incap/spell_nature_polymorph.tga";
@@ -31,6 +32,7 @@ import incapAlt4 from "./assets/alternative-incap/spell_shaman_hex.tga";
 import fearAlt1 from "./assets/alternative-fear/spell_shadow_possession.tga";
 import fearAlt2 from "./assets/alternative-fear/spell_shadow_psychicscream.tga";
 import fearAlt3 from "./assets/alternative-fear/spell_shadow_mindsteal.tga";
+import fearAlt4 from "./assets/alternative-fear/Spell_Nature_EarthBind.tga";
 
 // Import alternative icons - Root
 import rootAlt1 from "./assets/alternative-root/spell_frost_frostnova.tga";
@@ -43,7 +45,11 @@ import rootAlt1 from "./assets/alternative-root/spell_frost_frostnova.tga";
 // Import app logo
 import appLogo from "./assets/app-logo.png";
 
-type Screen = "auto-detect" | "folder-select" | "version-select" | "dr-customize";
+type Screen =
+  | "auto-detect"
+  | "folder-select"
+  | "version-select"
+  | "dr-customize";
 
 interface DetectedWowFolder {
   folder: string;
@@ -73,6 +79,7 @@ const initialDRCategories: DRCategory[] = [
       { src: stunAlt2, name: "Cheap Shot" },
       { src: stunAlt3, name: "Hammer of Justice" },
       { src: stunAlt4, name: "Lightning Lasso" },
+      { src: stunAlt5, name: "Mangle" },
     ],
     selectedIcon: stunDefault,
     affectedAbilities: [
@@ -95,7 +102,7 @@ const initialDRCategories: DRCategory[] = [
       { src: incapAlt4, name: "Hex" },
     ],
     selectedIcon: incapDefault,
-    affectedAbilities: [    ],
+    affectedAbilities: [],
   },
   {
     id: "fear",
@@ -107,6 +114,7 @@ const initialDRCategories: DRCategory[] = [
       { src: fearAlt1, name: "Possession" },
       { src: fearAlt2, name: "Psychic Scream" },
       { src: fearAlt3, name: "Blind" },
+      { src: fearAlt4, name: "Earthbind" },
     ],
     selectedIcon: fearDefault,
     affectedAbilities: [],
@@ -183,7 +191,10 @@ function App() {
         const legacySavedIcons =
           await store.get<Record<string, string>>("selectedIcons");
 
-        if (savedIconsByVersion && Object.keys(savedIconsByVersion).length > 0) {
+        if (
+          savedIconsByVersion &&
+          Object.keys(savedIconsByVersion).length > 0
+        ) {
           setSelectedIconsByVersion(savedIconsByVersion);
         } else if (legacySavedIcons) {
           setSelectedIconsByVersion({ __legacy__: legacySavedIcons });
@@ -207,8 +218,9 @@ function App() {
         }
 
         if (!resolvedSaved) {
-          const detected =
-            await invoke<DetectedWowFolder | null>("auto_detect_wow_folder");
+          const detected = await invoke<DetectedWowFolder | null>(
+            "auto_detect_wow_folder",
+          );
           if (detected) {
             setAutoDetected(detected);
             setScreen("auto-detect");
@@ -297,10 +309,7 @@ function App() {
     }
   }
 
-  async function saveSelectedIcons(
-    version: string,
-    categories: DRCategory[],
-  ) {
+  async function saveSelectedIcons(version: string, categories: DRCategory[]) {
     try {
       const store = await Store.load("settings.json");
       const selections: Record<string, string> = {};
@@ -334,7 +343,8 @@ function App() {
       );
       return {
         ...category,
-        selectedIcon: isDefault || isAlternative ? storedIcon : category.defaultIcon,
+        selectedIcon:
+          isDefault || isAlternative ? storedIcon : category.defaultIcon,
       };
     });
   }
